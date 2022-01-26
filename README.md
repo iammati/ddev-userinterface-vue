@@ -5,12 +5,22 @@ Experimental UI for ddev based on golang as backend and vue3 as frontend.
 Note that minimum requirements to compile this are:
 - go v1.17
 
-ddev should take care for the leftover parts of the frontend via `ddev pnpm`.
+ddev should take care for the leftover parts of the frontend via `ddev pnpm` commands as you can see below.
 
 ## Project setup
 ```
 git clone https://github.com/iammati/ddev-ui .
 ddev pnpm install
+```
+
+### Building the ui
+
+In case you're running on wsl2 – as I do – you may want to [checkout this video here](https://www.youtube.com/watch?v=o6H6q3xg8wg)
+as it installs chrome inside your wsl2 distribution to be able running the built golang binary.
+
+```
+ddev pnpm run build
+go run app.go
 ```
 
 ### Compiles and hot-reloads for development
