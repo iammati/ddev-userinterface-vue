@@ -1,0 +1,7 @@
+#!/bin/bash
+
+## Description: Run pnpm inside the web container in the root of the project (Use -C for another directory)
+## Usage: pnpm [flags] [args]
+## Example: "ddev pnpm i[nstall]" or "ddev pnpm add learna" or "ddev pnpm -C app/frontend add learna"
+
+ddev exec pnpm "$@"

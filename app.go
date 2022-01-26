@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/zserge/lorca"
@@ -11,25 +10,24 @@ import (
 
 func server() {
 	router := gin.Default()
+	router.StaticFS("/dist", http.Dir("./dist"))
+	router.LoadHTMLGlob("./dist/index.html")
 
-	router.LoadHTMLGlob("./public/index.html")
-	router.StaticFS("/public/dist", http.Dir("./public/dist"))
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", nil)
 	})
 
 	// Retrieving ddevapp to do some fancy stuff with it
-	// in case its necessary, not yet
+	// in case its necessary. For the moment not at all (yet)
     // app := &ddevapp.DdevApp{}
 
     // Simple router status retriever via ddev's GetRouterStatus func
 	router.GET("/api/router_status", func(c *gin.Context) {
 		status, warning := ddevapp.GetRouterStatus()
 
-        // fmt.Println(status, warning)
-
 		c.JSON(200, gin.H{
-			"data": status,
+			"status": status,
+			"warning": warning,
 		})
 	})
 
