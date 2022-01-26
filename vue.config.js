@@ -6,7 +6,7 @@ module.exports = {
     publicPath: production ? '/dist/' : '/public/',
     devServer: {
         port: 3000,
-        public: 'test.ddev.site:2999/public/',
+        public: 'ddev-ui.ddev.site:2999/public/',
         overlay: true,
         disableHostCheck: true,
         hot: true,
