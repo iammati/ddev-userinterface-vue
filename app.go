@@ -1,11 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/zserge/lorca"
 	"github.com/gin-gonic/gin"
     "github.com/drud/ddev/pkg/ddevapp"
+	"github.com/drud/ddev/pkg/exec"
 )
 
 func server() {
@@ -31,6 +33,21 @@ func server() {
 		})
 	})
 
+	// List of ddev projects
+	router.GET("/api/list_projects", func(c *gin.Context) {
+		// apps := ddevapp.GetActiveProjects()
+		DdevBin := "/usr/local/bin/ddev"
+		jsonOut, err := exec.RunHostCommand(DdevBin, "list", "-j")
+
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		c.JSON(200, gin.H{
+			"list": jsonOut,
+		})
+	})
+
 	go router.Run(":8080")
 }
 
@@ -43,4 +60,8 @@ func main() {
 
 	ui.Load("http://localhost:8080")
 	<-ui.Done()
+}
+
+func Var_dump(expression ...interface{} ) {
+	fmt.Println(fmt.Sprintf("%#v", expression))
 }
