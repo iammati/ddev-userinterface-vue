@@ -2,49 +2,49 @@
     <div class="projects">
         <h1>This is a list of projects</h1>
 
-        <button id="list_projects">
+        <button v-on:click="getItems()">
             /api/list_projects
         </button>
 
-        <ul id="projects"></ul>
+        <ul id="projects">
+            <li v-for="(item, index) in items" :key="index">
+                <ProjectRow :data="item" />
+            </li>
+        </ul>
     </div>
 </template>
 
-<script lang="ts">
-interface ProjectRow {
-    approot: string;
-    docroot: string;
-    htpsurl: string;
-    httpurl: string;
-    name: string;
-    primary_url: string;
-    router_disabled: string;
-    shortroot: string;
-    status: string;
-    type: string;
-}
+<script>
+import ProjectRow from "@/components/ProjectRow.vue";
+import { api } from '../utils/api';
 
 export default {
-    mounted() {
-        const node = document.getElementById("list_projects");
-
-        if (!node) return;
-
-        node.onclick = async e => {
-            const response = await fetch("/api/list_projects")
-            const text = await response.text();
-            const json = JSON.parse(text);
+    name: "Projects",
+    components: {
+        ProjectRow,
+    },
+    data() {
+        return {
+            items: null,
+        };
+    },
+    methods: {
+        getItems: async function() {
+            const response = await api("/list_projects")
+            const json = await response.json();
 
             // rows includes list of projects
-            const rows = JSON.parse(json.list).raw as ProjectRow[];
-            const ul = document.getElementById("projects");
+            const rows = JSON.parse(json.list).raw;
+            this.items = rows;
+        },
+    },
+    async mounted() {
+        const response = await api("/list_projects")
+        const json = await response.json();
 
-            if (!ul) return;
-
-            rows.forEach((row: ProjectRow) => {
-                ul.insertAdjacentHTML('beforeend', `<li>name: ${row.name}, url: ${row.primary_url}, status: ${row.status}, type: ${row.type}</li>`);
-            });
-        };
+        // rows includes list of projects
+        const rows = JSON.parse(json.list).raw;
+        this.items = rows;
     }
 }
 </script>

@@ -19,7 +19,11 @@
 
                     <li id="ddev-router" class="online">
                         <a href="#">
-                            ddev-router: <span></span>
+                            ddev-router: 
+
+                            <span>
+                                <DdevRouterStatus :data="routerData" />
+                            </span>
                         </a>
                     </li>
                 </ul>
@@ -27,10 +31,44 @@
         </section>
 
         <section id="content">
+            <span class="relative inline-flex">
+      <button type="button" class="inline-flex items-center px-4 py-2 font-semibold leading-6 text-sm shadow rounded-md text-sky-500 bg-white dark:bg-slate-800 transition ease-in-out duration-150 cursor-not-allowed ring-1 ring-slate-900/10 dark:ring-slate-200/20" disabled="">
+        Transactions
+      </button>
+      <span class="flex absolute h-3 w-3 top-0 right-0 -mt-1 -mr-1">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
+      </span>
+    </span>
+
             <router-view />
         </section>
     </main>
 </template>
+
+<script>
+import DdevRouterStatus from "@/components/DdevRouterStatus.vue";
+import { api } from "./utils/api";
+
+export default {
+    name: "App",
+    components: {
+        DdevRouterStatus,
+    },
+    data() {
+        return {
+            routerData: {
+                status: "unknown",
+                warning: "none",
+            },
+        };
+    },
+    async mounted() {
+        const routerData = await api("/router_status").then(response => response.json())
+        this.routerData = routerData
+    },
+}
+</script>
 
 <style lang="scss">
 $primary: #00325a;
@@ -125,5 +163,28 @@ body {
             }
         }
     }
+}
+
+#ngProgress {
+    margin: 0;
+    padding: 0;
+    z-index: 99998;
+    background-color: gold !important;
+    color: gold !important;
+    box-shadow: 0 0 10px 0;
+    height: 2px;
+    width: 0%;
+    opacity: 1;
+    transition: all .5s ease-in-out
+}
+
+#ngProgress-container {
+    position: fixed;
+    margin: 0;
+    padding: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 99999
 }
 </style>

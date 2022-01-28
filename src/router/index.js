@@ -1,7 +1,8 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
+import Progress from '../utils/progress';
 import Home from "../views/Home.vue";
 
-const routes: Array<RouteRecordRaw> = [
+const routes = [
     {
         path: "/",
         name: "Home",
@@ -22,5 +23,10 @@ const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
     routes,
 });
+
+const progress = new Progress();
+
+router.beforeEach(() => progress.start());
+router.afterEach(() => progress.complete());
 
 export default router;

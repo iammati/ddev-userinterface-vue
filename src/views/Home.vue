@@ -1,15 +1,20 @@
 <template>
-    <div class="home"></div>
+    <div class="home">
+        <button v-on:click="api('/router_status')">
+            /api/router_status
+        </button>
+        <button v-on:click="api('/list_projects')">
+            /api/list_projects
+        </button>
+    </div>
 </template>
 
-<script lang="ts">
-import { Options, Vue } from "vue-class-component";
-import HelloWorld from "@/components/HelloWorld.vue";
+<script>
+import { api } from "../utils/api";
 
-@Options({
-    components: {
-        HelloWorld,
+export default {
+    methods: {
+        api: endpoint => api(endpoint),
     },
-})
-export default class Home extends Vue {}
+}
 </script>

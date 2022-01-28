@@ -4,10 +4,13 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/zserge/lorca"
+	"github.com/drud/ddev/pkg/ddevapp"
+    "github.com/drud/ddev/pkg/exec"
+
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-    "github.com/drud/ddev/pkg/ddevapp"
-	"github.com/drud/ddev/pkg/exec"
+
+	"github.com/zserge/lorca"
 )
 
 func server() {
@@ -23,30 +26,42 @@ func server() {
 	// in case its necessary. For the moment not at all (yet)
     // app := &ddevapp.DdevApp{}
 
-    // Simple router status retriever via ddev's GetRouterStatus func
-	router.GET("/api/router_status", func(c *gin.Context) {
-		status, warning := ddevapp.GetRouterStatus()
+	router.Use(cors.Default())
 
-		c.JSON(200, gin.H{
-			"status": status,
-			"warning": warning,
+	// Endpoints for REST api v1
+    v1 := router.Group("/api")
+    {
+	    // Simple router status retriever via ddev's GetRouterStatus func
+        v1.GET("/router_status", func(c *gin.Context) {
+			status, warning := ddevapp.GetRouterStatus()
+
+			c.JSON(200, gin.H{
+				"status": status,
+				"warning": warning,
+			})
+        })
+
+		// List of ddev projects
+		v1.GET("/list_projects", func(c *gin.Context) {
+			DdevBin := "/usr/local/bin/ddev"
+			jsonOutput, err := exec.RunHostCommand(DdevBin, "list", "-j")
+
+			if err != nil {
+				fmt.Println(err)
+			}
+
+			c.JSON(200, gin.H{
+				"list": jsonOutput,
+			})
 		})
-	})
+    }
 
-	// List of ddev projects
-	router.GET("/api/list_projects", func(c *gin.Context) {
-		// apps := ddevapp.GetActiveProjects()
-		DdevBin := "/usr/local/bin/ddev"
-		jsonOut, err := exec.RunHostCommand(DdevBin, "list", "-j")
+	// Note that this should only be used in development
+	// and MUST BE changed as soon as it goes into production
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
 
-		if err != nil {
-			fmt.Println(err)
-		}
-
-		c.JSON(200, gin.H{
-			"list": jsonOut,
-		})
-	})
+	router.Use(cors.New(config))
 
 	go router.Run(":8080")
 }
@@ -60,8 +75,4 @@ func main() {
 
 	ui.Load("http://localhost:8080")
 	<-ui.Done()
-}
-
-func Var_dump(expression ...interface{} ) {
-	fmt.Println(fmt.Sprintf("%#v", expression))
 }
