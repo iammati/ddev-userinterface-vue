@@ -9,9 +9,9 @@ export default {
     props: {
         data: Object,
     },
-}
+};
 </script>
 
 <style scoped lang="scss">
-    // xaxaxa
+// xaxaxa
 </style>

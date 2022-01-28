@@ -1,8 +1,8 @@
 import { createApp } from "vue";
 import App from "./App.vue";
-import './index.css'
-
 import "./registerServiceWorker";
 import router from "./router";
+import "node-waves/dist/waves.min.css";
+import "sweetalert2/src/sweetalert2.scss";
 
 createApp(App).use(router).mount("#app");

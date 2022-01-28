@@ -1,12 +1,12 @@
-const production = process.env.NODE_ENV === 'production'
+const production = process.env.NODE_ENV === "production";
 
 /** @type {import('@vue/cli-service').ProjectOptions} */
 module.exports = {
     runtimeCompiler: true,
-    publicPath: production ? '/dist/' : '/public/',
+    publicPath: production ? "/dist/" : "/public/",
     devServer: {
         port: 3000,
-        public: 'ddev-ui.ddev.site:2999/public/',
+        public: "ddev-ui.ddev.site:2999/public/",
         overlay: true,
         disableHostCheck: true,
         hot: true,
@@ -24,4 +24,4 @@ module.exports = {
             poll: 5,
         },
     },
-}
+};

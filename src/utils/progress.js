@@ -1,11 +1,11 @@
 export default class Progress {
-    constructor () {
+    constructor() {
         this.count = 0;
         this.intervalCounterId = 0;
-        this.progressbarEl = document.querySelector('#ngProgress');
+        this.progressbarEl = document.querySelector("#ngProgress");
     }
 
-    start () {
+    start() {
         this.show();
         const self = this;
         clearInterval(this.intervalCounterId);
@@ -16,58 +16,60 @@ export default class Progress {
                 self.hide();
             } else {
                 self.remaining = 100 - self.count;
-                self.count = self.count + (0.15 * Math.pow(1 - Math.sqrt(self.remaining), 2));
+                self.count =
+                    self.count +
+                    0.15 * Math.pow(1 - Math.sqrt(self.remaining), 2);
                 self.updateCount(self.count);
             }
         }, 200);
     }
 
     /**
-     * @param {int} new_count 
+     * @param {int} new_count
      */
-    updateCount (new_count) {
+    updateCount(new_count) {
         this.count = new_count;
         this.progressbarEl.style.width = `${this.count}%`;
     }
 
-    hide () {
-        this.progressbarEl.style.opacity = '0';
+    hide() {
+        this.progressbarEl.style.opacity = "0";
         const self = this;
         self.animate(() => {
-            self.progressbarEl.style.width = '0%';
+            self.progressbarEl.style.width = "0%";
             self.animate(() => {
                 self.show();
             }, 500);
         }, 500);
     }
 
-    show () {
+    show() {
         const self = this;
         self.animate(() => {
-            self.progressbarEl.style.opacity = '1';
+            self.progressbarEl.style.opacity = "1";
         }, 100);
     }
 
     /**
      * Delay a given function by time
-     * 
-     * @param {Closure} fn 
-     * @param {int} time 
+     *
+     * @param {Closure} fn
+     * @param {int} time
      */
-    animate (fn, time) {
+    animate(fn, time) {
         if (this.animation !== undefined) clearTimeout(this.animation);
         this.animation = setTimeout(fn, time);
     }
 
-    stop () {
+    stop() {
         clearInterval(this.intervalCounterId);
     }
 
     /**
-     * @param {int} new_count 
+     * @param {int} new_count
      * @returns {int}
      */
-    set (new_count) {
+    set(new_count) {
         this.show();
         this.updateCount(new_count);
         this.count = new_count;
@@ -78,7 +80,7 @@ export default class Progress {
     /**
      * @returns {int} 0
      */
-    reset () {
+    reset() {
         clearInterval(this.intervalCounterId);
         this.count = 0;
         this.updateCount(this.count);
@@ -88,7 +90,7 @@ export default class Progress {
     /**
      * @returns {int}
      */
-    complete () {
+    complete() {
         this.count = 100;
         this.updateCount(this.count);
         const self = this;

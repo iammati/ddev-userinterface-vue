@@ -11,11 +11,11 @@
 <script>
 export default {
     props: {
-        data: Object
+        data: Object,
     },
-}
+};
 </script>
 
 <style scoped lang="scss">
-    // xaxaxa
+// xaxaxa
 </style>

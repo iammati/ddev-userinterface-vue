@@ -2,9 +2,7 @@
     <div class="projects">
         <h1>This is a list of projects</h1>
 
-        <button v-on:click="getItems()">
-            /api/list_projects
-        </button>
+        <button v-on:click="getItems()">/api/list_projects</button>
 
         <ul id="projects">
             <li v-for="(item, index) in items" :key="index">
@@ -16,7 +14,7 @@
 
 <script>
 import ProjectRow from "@/components/ProjectRow.vue";
-import { api } from '../utils/api';
+import { api } from "../utils/api";
 
 export default {
     name: "Projects",
@@ -29,8 +27,8 @@ export default {
         };
     },
     methods: {
-        getItems: async function() {
-            const response = await api("/list_projects")
+        getItems: async function () {
+            const response = await api("/list_projects");
             const json = await response.json();
 
             // rows includes list of projects
@@ -39,12 +37,12 @@ export default {
         },
     },
     async mounted() {
-        const response = await api("/list_projects")
+        const response = await api("/list_projects");
         const json = await response.json();
 
         // rows includes list of projects
         const rows = JSON.parse(json.list).raw;
         this.items = rows;
-    }
-}
+    },
+};
 </script>

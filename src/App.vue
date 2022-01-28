@@ -17,13 +17,16 @@
                         <router-link to="/projects">Projects</router-link>
                     </li>
 
-                    <li id="ddev-router" class="online">
-                        <a href="#">
-                            ddev-router: 
-
-                            <span>
-                                <DdevRouterStatus :data="routerData" />
+                    <li id="ddev-router" data-status="unknown">
+                        <a href="#" class="flex">
+                            <span class="pulse">
+                                <span class="animate-ping"></span>
+                                <span class="static-bg"></span>
                             </span>
+
+                            <span class="mr-2"> ddev-router: </span>
+
+                            <DdevRouterStatus :data="routerData" />
                         </a>
                     </li>
                 </ul>
@@ -39,6 +42,8 @@
 <script>
 import DdevRouterStatus from "@/components/DdevRouterStatus.vue";
 import { api } from "./utils/api";
+// import Swal from 'sweetalert2';
+// import { Swal2Toastr } from "./utils/swal2toastr";
 
 export default {
     name: "App",
@@ -53,11 +58,31 @@ export default {
             },
         };
     },
-    async mounted() {
-        const routerData = await api("/router_status").then(response => response.json())
-        this.routerData = routerData
+    mounted() {
+        setInterval(async () => {
+            const routerData = await api("/router_status").then((response) =>
+                response.json()
+            );
+            this.routerData = routerData;
+
+            if (routerData.status.length > 0) {
+                document
+                    .getElementById("ddev-router")
+                    .setAttribute("data-status", routerData.status);
+            }
+        }, 1000);
+
+        // Swal.fire({
+        //     title: 'Error!',
+        //     text: 'Do you want to continue',
+        //     icon: 'error',
+        //     confirmButtonText: 'Cool'
+        // })
+
+        // const a = (new Swal2Toastr()).createToastWrapper();
+        // console.log(a);
     },
-}
+};
 </script>
 
 <style lang="scss">
@@ -81,7 +106,7 @@ body {
             width: 200px;
         }
     }
-    
+
     main {
         display: grid;
         grid-template-columns: 240px 1fr;
@@ -119,8 +144,84 @@ body {
                                 position: absolute;
                                 bottom: 0;
 
+                                span {
+                                    position: relative;
+                                    display: block;
+                                    width: 18px;
+                                    height: 18px;
+
+                                    .animate-ping {
+                                        animation: ping 1s cubic-bezier(0, 0, .2, 1) infinite;
+                                        opacity: .75;
+                                        border-radius: 9999px;
+                                        width: 100%;
+                                        height: 100%;
+                                        display: inline-flex;
+                                        position: absolute;
+                                    }
+                                }
+
+                                &[data-status="healthy"] {
+                                    span {
+                                        .animate-ping {
+                                            background-color: rgba(
+                                                52,
+                                                211,
+                                                153,
+                                                0.75
+                                            );
+
+                                            & + span {
+                                                background-color: rgba(
+                                                    52,
+                                                    211,
+                                                    153,
+                                                    0.75
+                                                );
+                                            }
+                                        }
+                                    }
+                                }
+
+                                &[data-status="unhealthy"],
+                                &[data-status="stopped"] {
+                                    span {
+                                        .animate-ping {
+                                            background-color: rgba(
+                                                251,
+                                                113,
+                                                133,
+                                                0.75
+                                            );
+
+                                            & + span {
+                                                background-color: rgba(
+                                                    244,
+                                                    63,
+                                                    94,
+                                                    0.75
+                                                );
+                                            }
+                                        }
+                                    }
+                                }
+
+                                &[data-status="unknown"],
+                                &[data-status="starting"] {
+                                    span {
+                                        .animate-ping {
+                                            background-color: gold;
+
+                                            & + span {
+                                                background-color: gold;
+                                            }
+                                        }
+                                    }
+                                }
+
                                 a {
                                     cursor: default;
+                                    display: flex;
 
                                     &:hover {
                                         background-color: inherit;
@@ -149,7 +250,7 @@ body {
                 padding: {
                     top: 1rem;
                     left: 1rem;
-                };
+                }
             }
         }
     }
@@ -165,7 +266,7 @@ body {
     height: 2px;
     width: 0%;
     opacity: 1;
-    transition: all .5s ease-in-out
+    transition: all 0.5s ease-in-out;
 }
 
 #ngProgress-container {
@@ -175,6 +276,6 @@ body {
     top: 0;
     left: 0;
     right: 0;
-    z-index: 99999
+    z-index: 99999;
 }
 </style>

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Progress from '../utils/progress';
+import Progress from "../utils/progress";
 import Home from "../views/Home.vue";
+import Waves from "node-waves";
 
 const routes = [
     {
@@ -27,6 +28,9 @@ const router = createRouter({
 const progress = new Progress();
 
 router.beforeEach(() => progress.start());
-router.afterEach(() => progress.complete());
+router.afterEach(() => {
+    Waves.init();
+    progress.complete();
+});
 
 export default router;
