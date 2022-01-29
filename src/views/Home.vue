@@ -9,7 +9,7 @@
 
         <button
             v-on:click="api('/list_projects')"
-            class="px-4 py-2 font-semibold text-sm bg-cyan-500 text-white rounded-full shadow"
+            class="btn btn-info waves-effect"
         >
             /api/list_projects
         </button>

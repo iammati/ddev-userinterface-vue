@@ -54,6 +54,15 @@ func server() {
 				"list": jsonOutput,
 			})
 		})
+
+		v1.POST("/start_project", func(c *gin.Context) {
+			Var_dump(c.PostFormMap("bla"))
+			Var_dump(c.PostForm("bla"))
+
+			c.JSON(200, gin.H{
+				"state": "starting",
+			})
+		})
     }
 
 	// Note that this should only be used in development
@@ -75,4 +84,8 @@ func main() {
 
 	ui.Load("http://localhost:8080")
 	<-ui.Done()
+}
+
+func Var_dump(expression ...interface{} ) {
+	fmt.Println(fmt.Sprintf("%#v", expression))
 }

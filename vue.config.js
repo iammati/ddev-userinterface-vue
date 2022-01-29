@@ -24,4 +24,11 @@ module.exports = {
             poll: 5,
         },
     },
+    css: {
+        loaderOptions: {
+            sass: {
+                prependData: `@import "@/styles/app.scss";`,
+            },
+        },
+    },
 };

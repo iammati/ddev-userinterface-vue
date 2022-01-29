@@ -1,14 +1,40 @@
 <template>
     <div class="projects">
-        <h1>This is a list of projects</h1>
+        <h1 >
+            Projects – {{ items && items.length }}
+        </h1>
 
-        <button v-on:click="getItems()">/api/list_projects</button>
+        <!-- <button class="btn btn-warning waves-effect" v-on:click="getItems()">/api/list_projects</button> -->
 
-        <ul id="projects">
-            <li v-for="(item, index) in items" :key="index">
-                <ProjectRow :data="item" />
-            </li>
-        </ul>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-sm ">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">URL</th>
+                        <th scope="col">Document Root</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr v-for="(item, index) in items" :key="index">
+                        <th scope="row">
+                            {{ index + 1 }}
+                        </th>
+
+                        <ProjectRow :data="item" />
+                    </tr>
+                </tbody>
+
+                <caption>
+                    List of detected projects configured on your machine.
+                </caption>
+            </table>
+        </div>
     </div>
 </template>
 
