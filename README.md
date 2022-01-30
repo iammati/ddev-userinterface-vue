@@ -40,3 +40,7 @@ ddev pnpm run build
 ```
 ddev pnpm run lint
 ```
+
+### Preview
+
+![ddev-ui-projects-view](https://user-images.githubusercontent.com/41418763/151707931-335a6ca4-f9d5-4ea2-bfa0-aa405af4c5e1.png)
