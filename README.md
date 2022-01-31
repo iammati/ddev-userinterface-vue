@@ -20,6 +20,7 @@ as it installs chrome inside your wsl2 distribution to be able running the built
 
 ```
 ddev pnpm run build
+go install
 go run app.go
 ```
 
@@ -30,6 +31,13 @@ ddev pnpm run serve
 
 Head over to `http://ddev-ui.ddev.site:2999/public/` in order to see hot-reloads being available.
 Hot changes won't affect the golang runtime.
+
+You may open another SSH connection to your server to make the API
+requests work and be handled by the golang backend by using:
+```
+go run app.go
+```
+In another terminal next to your running `ddev pnpm run serve`.
 
 ### Compiles and minifies for production
 ```
