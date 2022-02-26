@@ -1,7 +1,9 @@
 package main
 
 import (
+	"errors"
 	"fmt"
+	"net"
 	"net/http"
 
 	"github.com/drud/ddev/pkg/ddevapp"
@@ -65,8 +67,8 @@ func server() {
 		})
     }
 
-	// Note that this should only be used in development
-	// and MUST BE changed as soon as it goes into production
+	// Since the UI only runs local, this shouldn't
+	// be that much of a security-issue, true?
 	config := cors.DefaultConfig()
 	config.AllowAllOrigins = true
 
@@ -76,16 +78,59 @@ func server() {
 }
 
 func main() {
+	ip, err := hostIP()
+	if err != nil {
+		fmt.Println(err)
+	}
+
 	server()
 
 	var ui lorca.UI
 	ui, _ = lorca.New("", "", 1200, 1024)
 	defer ui.Close()
 
-	ui.Load("http://localhost:8080")
+	ui.Load("http://" + ip + ":8080")
 	<-ui.Done()
 }
 
 func Var_dump(expression ...interface{} ) {
 	fmt.Println(fmt.Sprintf("%#v", expression))
+}
+
+// @credits https://stackoverflow.com/a/23558495/12100192
+func hostIP() (string, error) {
+	ifaces, err := net.Interfaces()
+	if err != nil {
+		return "", err
+	}
+	for _, iface := range ifaces {
+		if iface.Flags&net.FlagUp == 0 {
+			continue // interface down
+		}
+		if iface.Flags&net.FlagLoopback != 0 {
+			continue // loopback interface
+		}
+		addrs, err := iface.Addrs()
+		if err != nil {
+			return "", err
+		}
+		for _, addr := range addrs {
+			var ip net.IP
+			switch v := addr.(type) {
+			case *net.IPNet:
+				ip = v.IP
+			case *net.IPAddr:
+				ip = v.IP
+			}
+			if ip == nil || ip.IsLoopback() {
+				continue
+			}
+			ip = ip.To4()
+			if ip == nil {
+				continue // not an ipv4 address
+			}
+			return ip.String(), nil
+		}
+	}
+	return "", errors.New("are you connected to the network?")
 }
