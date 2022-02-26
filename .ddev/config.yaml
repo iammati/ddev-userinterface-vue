@@ -1,4 +1,4 @@
-name: ddev-ui
+name: ddev-userinterface-vue
 type: php
 php_version: "7.4"
 webserver_type: nginx-fpm
