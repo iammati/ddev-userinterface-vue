@@ -6,6 +6,4 @@ RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm &&\
     # making sure to have the latest pnpm version and updating if possible
     pnpm add -g pnpm &&\
     # enable pre/post hooks for pnpm's run-script lifecycle
-    pnpm config set enable-pre-post-script true &&\
-    # uninstalling Yarn and npm since we got pnpm now
-    /usr/bin/npm uninstall yarn npm
+    pnpm config set enable-pre-post-script true
